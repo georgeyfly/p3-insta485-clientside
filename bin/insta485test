@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# stop when error occur
+# -E represents track all the function in the script
+# -e represents exit if any fails
+# -u represents unset variables are considered as fail
+# -o pipefail represents return 0 if all functions succeed while non-zero otherwise
+# set -x make all executed command is marked with + sign, 
+# it's easy to see where the command's output begins.
+set -Eeuo pipefail
+
+echo "+ pycodestyle insta485"
+pycodestyle insta485
+
+echo "+ pydocstyle insta485"
+pydocstyle insta485
+
+echo "+ pylint insta485"
+pylint insta485
+
+echo "+ pytest -v tests"
+pytest -v tests

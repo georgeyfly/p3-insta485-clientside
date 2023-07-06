@@ -1,0 +1,80 @@
+#!/bin/bash
+# insta485db
+
+# stop when error occur
+# -E represents track all the function in the script
+# -e represents exit if any fails
+# -u represents unset variables are considered as fail
+# -o pipefail represents return 0 if all functions succeed while non-zero otherwise
+# set -x make all executed command is marked with + sign, 
+# it's easy to see where the command's output begins.
+set -Eeuo pipefail
+# set -x
+
+# Sanity check command line options
+usage() {
+  echo "Usage: $0 (create|destroy|reset|dump)"
+}
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+# Parse argument.  $1 is the first argument
+case $1 in
+  "create")
+    # Define the path to the database file
+    DATABASE_PATH="var/insta485.sqlite3"
+    if [[ -f $DATABASE_PATH ]]; then
+        echo "Error: database already exists"
+        exit 1
+    else
+        echo "+ mkdir -p var/uploads"
+        mkdir -p var/uploads
+        echo "+ sqlite3 var/insta485.sqlite3 < sql/schema.sql"
+        sqlite3 var/insta485.sqlite3 < sql/schema.sql
+        echo "+ sqlite3 var/insta485.sqlite3 < sql/data.sql"
+        sqlite3 var/insta485.sqlite3 < sql/data.sql
+        echo "+ cp sql/uploads/* var/uploads/"
+        cp sql/uploads/* var/uploads/
+    fi
+    ;;
+
+  "destroy")
+    echo "+ rm -rf var/insta485.sqlite3 var/uploads"
+    rm -rf var/insta485.sqlite3 var/uploads
+    ;;
+
+  "reset")
+    echo "+ rm -rf var/insta485.sqlite3 var/uploads"
+    rm -rf var/insta485.sqlite3 var/uploads
+    echo "+ mkdir -p var/uploads"
+    mkdir -p var/uploads
+    echo "+ sqlite3 var/insta485.sqlite3 < sql/schema.sql"
+    sqlite3 var/insta485.sqlite3 < sql/schema.sql
+    echo "+ sqlite3 var/insta485.sqlite3 < sql/data.sql"
+    sqlite3 var/insta485.sqlite3 < sql/data.sql
+    echo "+ cp sql/uploads/* var/uploads/"
+    cp sql/uploads/* var/uploads/
+    ;;
+
+  "dump")
+    # Define the path to the database file
+    DATABASE_PATH="var/insta485.sqlite3"
+    # Function to fetch all table names from the database
+    get_table_names() {
+        # sqlite3 $DATABASE_PATH "SELECT name FROM sqlite_master WHERE type='table';"
+        sqlite3 $DATABASE_PATH ".tables"
+    }
+    tables=$(get_table_names)
+    for table in $tables; do
+        echo "+ sqlite3 -batch -line $DATABASE_PATH 'SELECT * FROM $table'"
+        sqlite3 -batch -line $DATABASE_PATH "SELECT * FROM $table"
+    done
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac

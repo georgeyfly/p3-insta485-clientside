@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Insta 485</title>
+{% endblock %}
+
+{% block body %}
+    <h2> Following </h2>
+    {% for follow in following %}
+        {% if follow.username2 != session.logname %}
+            {% if not follow.logFollowUser %}
+                <h4>not following</h4>
+            <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                <form action="{{ url_for('handle_following') }}?target={{ url_for('show_following', user_url_slug=follow.username1) }}" method="post" enctype="multipart/form-data">
+                <input type="submit" name="follow" value="follow"/>
+                <input type="hidden" name="username" value="{{follow.username2}}"/>
+                <input type="hidden" name="operation" value="follow"/>
+            </form>
+            {% else %}
+                <h4>following</h4>
+            <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+                <form action="{{ url_for('handle_following') }}?target={{ url_for('show_following', user_url_slug=follow.username1) }}" method="post" enctype="multipart/form-data">
+                <input type="submit" name="unfollow" value="unfollow"/>
+                <input type="hidden" name="username" value="{{follow.username2}}"/>
+                <input type="hidden" name="operation" value="unfollow"/>
+            </form>
+            {% endif %}
+        {% endif %}
+        <br>
+        <img class="profile_img" src={{ url_for('uploaded_file', filename=follow['user_img_url']) }} alt="profile">
+        <a href="/users/{{follow['username2']}}/">
+            {{follow['username2']}}
+        </a>
+        <!-- modi -->
+        {% if follow['logname_follows_username'] %}
+            following
+        {% elif follow['username'] != logname %}
+            not following
+        {% endif %}
+    {% endfor %}
+{% endblock %}

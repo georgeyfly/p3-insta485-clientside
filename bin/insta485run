@@ -1,0 +1,22 @@
+#!/bin/bash
+# insta485run
+
+# stop when error occur
+# -E represents track all the function in the script
+# -e represents exit if any fails
+# -u represents unset variables are considered as fail
+# -o pipefail represents return 0 if all functions succeed while non-zero otherwise
+# set -x make all executed command is marked with + sign, 
+# it's easy to see where the command's output begins.
+set -Eeuo pipefail
+# set -x
+
+DATABASE_PATH="var/insta485.sqlite3"
+if [[ ! -f $DATABASE_PATH ]]; then
+    echo "Error: can't find database var/insta485.sqlite3"
+    echo "Try: ./bin/insta485db create"
+    exit 1
+else
+    echo "+ flask --app insta485 --debug run --host 0.0.0.0 --port 8000"
+    flask --app insta485 --debug run --host 0.0.0.0 --port 8000
+fi

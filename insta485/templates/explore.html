@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Insta 485</title>
+{% endblock %}
+
+{% block body %}
+    <h2> Discover People </h2>
+    {% for nfollow in not_following %}
+        {% if nfollow.username != session.logname %}
+            <img class="profile_img" src={{ url_for('uploaded_file', filename=nfollow.user_img_url) }} alt="profile">
+            <a href="/users/{{nfollow['username']}}/">
+                {{nfollow['username']}}
+            </a>
+            <form action="{{ url_for("handle_following") }}?target={{ url_for("show_explore") }}" method="post" enctype="multipart/form-data">
+                <input type="submit" name="follow" value="follow"/>
+                <input type="hidden" name="username" value="{{ nfollow['username'] }}"/>
+                <input type="hidden" name="operation" value="follow"/>
+            </form>
+            <br>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

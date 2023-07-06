@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Insta 485</title>
+{% endblock %}
+
+{% block body %}
+    <h2> {{username}} </h2>
+    <h4><a href="{{ url_for('show_edit') }}"> Edit profile </a></h4>
+    {% if username != session.logname %}
+        {% if not logFollowUser %}
+        <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+            <form action="{{ url_for('handle_following') }}?target={{ url_for('show_user', user_url_slug=username) }}" method="post" enctype="multipart/form-data">
+            <input type="submit" name="follow" value="follow"/>
+            <input type="hidden" name="username" value="{{username}}"/>
+            <input type="hidden" name="operation" value="follow"/>
+        </form>
+        {% else%}
+        <!-- DO NOT CHANGE THIS (aside from where we say 'FIXME') -->
+            <form action="{{ url_for('handle_following') }}?target={{ url_for('show_user', user_url_slug=username) }}" method="post" enctype="multipart/form-data">
+            <input type="submit" name="unfollow" value="unfollow"/>
+            <input type="hidden" name="username" value="{{username}}"/>
+            <input type="hidden" name="operation" value="unfollow"/>
+        </form>
+        {% endif %}
+    {% endif %}
+    {% if username == session['logname'] %}
+        <form action="{{ url_for('logout') }}" method="post" enctype="multipart/form-data">
+            <input type="submit" name="logout" value="Logout"/>
+        </form>
+        <form action="{{ url_for('handle_post') }}?target={{ url_for('show_index') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required/>
+            <input type="submit" name="create_post" value="upload new post"/>
+            <input type="hidden" name="operation" value="create"/>
+        </form>
+    {% endif %}
+    <p>{{total_posts}} 
+        {% if total_posts == 1 %} post 
+        {% else %} posts
+        {% endif %}
+        <a href="/users/{{username}}/followers/">
+            {{followers}} 
+            {% if followers == 1 %} follower 
+            {% else %} followers
+            {% endif %}
+        </a> 
+        <a href="/users/{{username}}/following/">
+            {{following}} following
+        </a>
+    </p>
+    <p>{{fullname}}</p>
+    {% for post in posts %}
+        <a href = {{ url_for('show_posts', postid_url_slug=post['postid']) }}>
+            <img class="post_img" src={{ url_for('uploaded_file', filename=post['filename']) }} alt="PostPicture">
+        </a>
+    {% endfor %}
+{% endblock %}

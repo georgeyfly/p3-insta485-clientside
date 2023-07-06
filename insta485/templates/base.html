@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="static/css/style.css" rel="stylesheet" type="text/css" /> -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <ul style="background-color: rgb(0, 95, 51, 0.5); border-radius: 10px;">
+        <li><a href="{{ url_for('show_index') }}">I(a)nstagram!</a></li>
+        <li class="leftstuff"><a href="{{ url_for('show_explore') }}">explore</a></li>
+        <li class="leftstuff"><a href="{{ url_for('show_user', user_url_slug=session['logname']) }}">{{session['logname']}}</a></li>
+    </ul>
+    {% block body %}{% endblock %}
+</body>
+</html>

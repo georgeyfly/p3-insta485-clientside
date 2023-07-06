@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Insta 485</title>
+{% endblock %}
+
+{% block body %}
+    <p>{{session['logname']}}</p>
+    <form action="{{ url_for('handle_account') }}?target={{ url_for('login') }}" method="post" enctype="multipart/form-data">
+        <input type="submit" name="delete" value="confirm delete account"/>
+        <input type="hidden" name="operation" value="delete"/>
+    </form>
+{% endblock %}

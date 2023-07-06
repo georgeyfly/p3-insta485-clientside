@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Insta 485</title>
+{% endblock %}
+
+{% block body %}
+    <form action="{{ url_for('handle_account') }}?target={{ url_for('show_index') }}" method="post" enctype="multipart/form-data">
+        Photo      <input type="file" name="file" required/> <br><br>
+        Name       <input type="text" name="fullname" required/> <br><br>
+        Username   <input type="text" name="username" required/> <br><br>
+        Email      <input type="text" name="email" required/> <br><br>
+        Password   <input type="password" name="password" required/> <br><br>
+        <input type="submit" name="signup" value="sign up"/> <br>
+        <input type="hidden" name="operation" value="create"/> 
+    </form>
+    <p>Have an account? 
+        <a href="{{ url_for('login') }}">Log in</a>
+    </p>
+    
+{% endblock %}
