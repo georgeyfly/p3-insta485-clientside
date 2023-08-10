@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import Likes from "./Likes";
+import Like from "./Like";
+import Comment from "./Comment";
 import useData from "./useData";
 
 // The parameter of this function is an object with a string called url inside it.
@@ -15,8 +16,8 @@ export default function Post({ url }) {
   const [timestamp, setTimestamp] = useState("");
   const [postShowUrl, setPostShowUrl] = useState("");
   const [ownerShowUrl, setOwnerShowUrl] = useState("");
+  const [postInfo, refetch] = useData(url);
 
-  const [postInfo, ] = useData(url);
   useEffect(() => {
     if (postInfo) {
       setImgUrl(postInfo.imgUrl);
@@ -28,6 +29,29 @@ export default function Post({ url }) {
     }
   }, [postInfo]);
 
+  function handleError(response) {
+    if (!response.ok) {
+      return response.json().then((data) => {
+        throw new Error(
+          `Server responded with status: ${response.status}. Message: ${data.message}`
+        );
+      });
+    }
+    return response;
+  }
+
+  function handleLike() {
+    const likeUrl = `/api/v1/likes/?postid=${postInfo.postid}`;
+    fetch(likeUrl, { method: "POST" })
+      .then(handleError)
+      .then(() => {
+        refetch();
+      })
+      .catch((error) => {
+        console.error("There was an error posting the like:", error);
+      });
+  }
+
   // Render post image and post owner
   return (
     <div className="post">
@@ -37,11 +61,17 @@ export default function Post({ url }) {
       <p>
         <a href={ownerShowUrl}>{owner}</a>
       </p>
-      <img className="post_img" src={imgUrl} alt="post_image" />
+      <img
+        className="post_img"
+        src={imgUrl}
+        alt="post_image"
+        onDoubleClick={handleLike}
+      />
       <div>
         <a href={postShowUrl}>{timestamp}</a>
       </div>
-      <Likes url={url} />
+      <Like postInfo={postInfo} callApi={refetch} />
+      <Comment postInfo={postInfo} callApi={refetch} />
     </div>
   );
 }
