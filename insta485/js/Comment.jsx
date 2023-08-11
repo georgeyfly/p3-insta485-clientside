@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import useData from "./useData";
 import Button from "./Button";
 
 export default function Comment({ postInfo, callApi }) {
   const [comments, setComments] = useState([]);
   const [textEntry, setTextEntry] = useState("");
-  const [newComment, setNewComment] = useState(null);
-  
+  const [, setNewComment] = useState(null);
+
   useEffect(() => {
     if (postInfo && postInfo.comments) {
       setComments(postInfo.comments);
@@ -64,7 +63,7 @@ export default function Comment({ postInfo, callApi }) {
       .catch((error) => {
         console.error("There was an error posting the comments:", error);
       });
-  }
+  };
 
   return (
     <div>
@@ -86,16 +85,38 @@ export default function Comment({ postInfo, callApi }) {
         ))}
       </div>
       <form className="comment-form" onSubmit={handleSubmit}>
-        <label>
-          <input type="text" value={textEntry} onChange={handleChange} />
-        </label>
+        <input type="text" value={textEntry} onChange={handleChange} />
       </form>
     </div>
   );
-  
 }
 
 Comment.propTypes = {
-  postInfo: PropTypes.object.isRequired,
-  callApi: PropTypes.func.isRequired
+  // postInfo: PropTypes.shape({
+  //   comments: PropTypes.arrayOf(
+  //     PropTypes.shape({
+  //       commentid: PropTypes.number,
+  //       lognameOwnsThis: PropTypes.bool,
+  //       owner: PropTypes.string,
+  //       ownerShowUrl: PropTypes.string,
+  //       text: PropTypes.string,
+  //       url: PropTypes.string,
+  //     })
+  //   ).isRequired,
+  //   comments_url: PropTypes.string,
+  //   created: PropTypes.string,
+  //   imgUrl: PropTypes.string,
+  //   likes: PropTypes.shape({
+  //     lognameLikesThis: PropTypes.bool,
+  //     numLikes: PropTypes.number,
+  //     url: PropTypes.string,
+  //   }).isRequired,
+  //   owner: PropTypes.string,
+  //   ownerImgUrl: PropTypes.string,
+  //   ownerShowUrl: PropTypes.string,
+  //   postShowUrl: PropTypes.string,
+  //   postid: PropTypes.number,
+  //   url: PropTypes.string,
+  // }).isRequired,
+  callApi: PropTypes.func.isRequired,
 };

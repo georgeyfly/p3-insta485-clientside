@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export default function Button({ className, onClick, text }) {
   return (
-    <button className="className" type="button" onClick={onClick}>
+    <button className={className} type="button" onClick={onClick}>
       {text}
     </button>
   );

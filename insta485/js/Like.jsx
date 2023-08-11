@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Button from "./Button";
 
-import useData from "./useData";
-
 export default function Like({ postInfo, callApi }) {
   const [numLikesVal, setNumlikesVal] = useState(0);
   const [lognameLikesThis, setLognameLikesThis] = useState(false);
@@ -31,8 +29,6 @@ export default function Like({ postInfo, callApi }) {
     fetch(likeUrl, { method: "POST" })
       .then(handleError)
       .then(() => {
-        setNumlikesVal((prevNumLikes) => prevNumLikes + 1);
-        setLognameLikesThis(true);
         callApi();
       })
       .catch((error) => {
@@ -45,8 +41,6 @@ export default function Like({ postInfo, callApi }) {
     fetch(likeUrl, { method: "DELETE" })
       .then(handleError)
       .then(() => {
-        setNumlikesVal((prevNumLikes) => prevNumLikes - 1);
-        setLognameLikesThis(false);
         callApi();
       })
       .catch((error) => {
@@ -81,6 +75,5 @@ export default function Like({ postInfo, callApi }) {
 }
 
 Like.propTypes = {
-  postInfo: PropTypes.object.isRequired,
   callApi: PropTypes.func.isRequired,
 };

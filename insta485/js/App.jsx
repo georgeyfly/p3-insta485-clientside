@@ -1,13 +1,12 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import PropTypes from "prop-types";
 import useData from "./useData";
 import Post from "./Post";
 
 export default function App({ url }) {
   const [currentUrl, setCurrentUrl] = useState(url);
-  const [postsInfo, refetch] = useData(currentUrl);
+  const [postsInfo, ,] = useData(currentUrl);
   const [postResults, setPostResults] = useState([]);
 
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function App({ url }) {
       next={() => {
         setCurrentUrl(postsInfo.next);
       }}
-      hasMore={currentUrl ? true : false} // Replace with a condition based on your data source
+      hasMore={!!currentUrl} // Replace with a condition based on your data source
       loader={<p>Loading...</p>}
       endMessage={<p>No more data to load.</p>}
     >
@@ -37,3 +36,7 @@ export default function App({ url }) {
     </InfiniteScroll>
   );
 }
+
+App.propTypes = {
+  url: PropTypes.string.isRequired,
+};

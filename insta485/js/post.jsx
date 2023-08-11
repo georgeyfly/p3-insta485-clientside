@@ -9,14 +9,13 @@ import useData from "./useData";
 // url is a prop for the Post component.
 export default function Post({ url }) {
   /* Display image and post owner of a single post */
-
   const [imgUrl, setImgUrl] = useState("");
   const [owner, setOwner] = useState("");
   const [ownerImgUrl, setOwnerImgUrl] = useState("");
   const [timestamp, setTimestamp] = useState("");
   const [postShowUrl, setPostShowUrl] = useState("");
   const [ownerShowUrl, setOwnerShowUrl] = useState("");
-  const [postInfo, refetch] = useData(url);
+  const [postInfo, refetch, loading] = useData(url);
 
   useEffect(() => {
     if (postInfo) {
@@ -50,6 +49,10 @@ export default function Post({ url }) {
       .catch((error) => {
         console.error("There was an error posting the like:", error);
       });
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   // Render post image and post owner

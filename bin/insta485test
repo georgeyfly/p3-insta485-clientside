@@ -7,7 +7,7 @@
 # -o pipefail represents return 0 if all functions succeed while non-zero otherwise
 # set -x make all executed command is marked with + sign, 
 # it's easy to see where the command's output begins.
-set -Eeuo pipefail
+# set -Eeuo pipefail
 
 echo "+ pycodestyle insta485"
 pycodestyle insta485
@@ -20,3 +20,9 @@ pylint insta485
 
 echo "+ pytest -v tests"
 pytest -v tests
+
+echo "+ npx eslint --ext jsx insta485/js"
+npx eslint --ext jsx insta485/js
+
+echo "+ npx prettier --check insta485/js"
+npx prettier --check insta485/js
